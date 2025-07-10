@@ -4,6 +4,8 @@
   "main": "server.js",
   "scripts": {
     "start":"SET NODE_ENV=production&node server.js",
+    "build":"SET NODE_ENV=production&node server.js",
+    "vercel-build":"SET NODE_ENV=production&node server.js",
     "dev":"SET NODE_ENV=development&nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
