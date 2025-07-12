@@ -18,7 +18,7 @@ app.use(cors({
     origin: ['http://localhost:4200', 'https://yourdomain.com'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials:true
+    credentials: true
 }));
 
 let limiter = rateLimit({
