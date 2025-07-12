@@ -37,12 +37,13 @@ exports.createSendResponse = (user, statusCode, res) => {
     const token = signToken(user);
     const options = {
         maxAge: convertTimeToMs(process.env.LOGIN_EXPIRES),
-        httpOnly: true
+        httpOnly: true,
+	secure: process.env.NODE_ENV === 'production',
+	sameSite: 'lax',
+ 	path: '/',
     }
 
-    if (process.env.NODE_ENV !== 'production') {
-        options.secure = true;
-    }
+   
 
     res.cookie('jwt', token, options);
     user.password = undefined;
