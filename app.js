@@ -14,7 +14,11 @@ const globalErrorHandler = require("./controllers/errorController");
 let app = express();
 
 // Enable CORS for all routes
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:4200', 'https://yourdomain.com'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 let limiter = rateLimit({
     max: 1000,
