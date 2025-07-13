@@ -35,26 +35,15 @@ const convertTimeToMs = (timeStr) => {
 
 exports.createSendResponse = (user, statusCode, res) => {
     const token = signToken(user);
-    const options = {
-        maxAge: convertTimeToMs(process.env.LOGIN_EXPIRES),
-        httpOnly: false,
-	secure: process.env.NODE_ENV === 'production',
-	sameSite: 'lax',
- 	path: '/',
-    }
-
-   
-
-    res.cookie('jwt', token, options);
     user.password = undefined;
     res.status(statusCode).json({
         status: "success",
+        token: token,
         data: {
             message: "successful login",
         }
     })
-
-}
+}   
 
 exports.signup = asyncErrorHandler(async (req, res, next) => {
     const existingUser = await User.findne({ email: req.body.email }).select('+active');
