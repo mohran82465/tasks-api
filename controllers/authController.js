@@ -37,7 +37,7 @@ exports.createSendResponse = (user, statusCode, res) => {
     const token = signToken(user);
     const options = {
         maxAge: convertTimeToMs(process.env.LOGIN_EXPIRES),
-        httpOnly: true,
+        httpOnly: false,
 	secure: process.env.NODE_ENV === 'production',
 	sameSite: 'lax',
  	path: '/',
