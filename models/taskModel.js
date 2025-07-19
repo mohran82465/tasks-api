@@ -19,9 +19,9 @@ const taskSchema = new mongoose.Schema({
         max: 5,
         default: 1,
     },
-    compelete: {
-        type: Boolean,
-        default: false
+    status: {
+        type: string,
+        default: 'Open'
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
