@@ -26,6 +26,7 @@ let limiter = rateLimit({
     windowMs: 60 * 60 * 1000,
     message: "we have received too many request from this Ip. Please try after one hour"
 });
+app.options('*', cors());
 
 app.use('/api', limiter);
 app.use(helmet());
