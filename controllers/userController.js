@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const CustomError = require('./../utils/customError');
 const util = require('util');
 const authController = require('./authController');
+const uploadToCloudinary = require('../utils/uploadToCloudinary');
 
 exports.getAllUsers = asyncErrorHandler(async (req, res, next) => {
     const users = await User.find();
@@ -68,3 +69,14 @@ exports.updateMe = asyncErrorHandler(async (req, res, next) => {
 
 
 })
+
+exports.uploadAvatar = async (req, res) => {
+    try {
+      const result = await uploadToCloudinary(req.file.buffer, 'avatars');
+      // Save the Cloudinary URL in your DB
+      const user = await User.findByIdAndUpdate(req.user.id, { avatar: result.secure_url }, { new: true });
+      res.status(200).json({ success: true, data: user });
+    } catch (error) {
+      res.status(500).json({ error: 'Upload failed', details: error.message });
+    }
+  };
