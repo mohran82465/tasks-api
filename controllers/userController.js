@@ -71,12 +71,27 @@ exports.updateMe = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.uploadAvatar = async (req, res) => {
+  
     try {
-      const result = await uploadToCloudinary(req.file.buffer, 'avatars');
-      // Save the Cloudinary URL in your DB
-      const user = await User.findByIdAndUpdate(req.user.id, { avatar: result.secure_url }, { new: true });
-      res.status(200).json({ success: true, data: user });
-    } catch (error) {
-      res.status(500).json({ error: 'Upload failed', details: error.message });
+      const { files } = await parseForm(req);
+  
+      if (!files.length) return res.status(400).json({ error: 'No file uploaded' });
+  
+      const { stream, info } = files[0];           
+      const publicId        = `${req.user.id}-${Date.now()}`; 
+  
+      const uploaded = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          { folder: 'avatars', public_id: publicId, resource_type: 'auto' },
+          (err, result) => (err ? reject(err) : resolve(result))
+        ).end(stream.read() ?? stream);
+      });
+  
+      await User.findByIdAndUpdate(req.user.id, { avatar: uploaded.secure_url });
+  
+      res.status(200).json({ url: uploaded.secure_url, public_id: uploaded.public_id });
+    } catch (err) {
+      console.error('[avatar upload]', err);
+      res.status(500).json({ error: err.message });
     }
   };
